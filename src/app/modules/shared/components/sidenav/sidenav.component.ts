@@ -9,11 +9,15 @@ import { Component, OnInit } from '@angular/core';
 export class SidenavComponent implements OnInit {
 	mobileQuery: MediaQueryList;
 
-  menuNav = [
-    { name: 'Home', icon: 'home', route: 'home' },
-    { name: 'Categorías', icon: 'category', route: 'category' },
-    { name: 'Productos', icon: 'production_quantity_limits', route: 'product' },
-  ];
+	menuNav = [
+		{ name: 'Home', icon: 'home', route: 'home' },
+		{ name: 'Categorías', icon: 'category', route: 'category' },
+		{
+			name: 'Productos',
+			icon: 'production_quantity_limits',
+			route: 'product',
+		},
+	];
 
 	constructor(media: MediaMatcher) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
