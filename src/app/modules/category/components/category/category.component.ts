@@ -123,6 +123,24 @@ export class CategoryComponent implements OnInit {
 			}
 		});
 	}
+
+	buscar(busqueda: string) {
+		if (busqueda.length == 0) {
+			this.getCategories();
+			return;
+		}
+
+		this.categoryService.getCategoryById(busqueda).subscribe(
+			(data: any) => {
+				console.log(data);
+				this.processCategoriesResponse(data);
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+		// this.dataSource.filter = busqueda.trim().toLowerCase();
+	}
 }
 
 export interface CategoryElement {
