@@ -10,6 +10,7 @@ import { CategoryService } from 'src/app/modules/shared/services/category.servic
 })
 export class NewCategoryComponent implements OnInit {
 	public categoryForm: FormGroup;
+	public estadoFormulario: string;
 
 	constructor(
 		private fb: FormBuilder,
@@ -17,10 +18,16 @@ export class NewCategoryComponent implements OnInit {
 		private dialogRef: MatDialogRef<NewCategoryComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any
 	) {
+		this.estadoFormulario = 'Agregar';
 		this.categoryForm = this.fb.group({
 			name: ['', Validators.required],
 			description: ['', Validators.required],
 		});
+
+		if (data !== null) {
+			this.updateForm(data);
+			this.estadoFormulario = 'Actualizar';
+		}
 	}
 
 	ngOnInit(): void {}
@@ -31,19 +38,39 @@ export class NewCategoryComponent implements OnInit {
 			description: this.categoryForm.get('description')?.value,
 		};
 
-		this.categoryService.saveCategory(data).subscribe(
-			(resp: any) => {
-				console.log(resp);
-				this.dialogRef.close(1);
-			},
-			(error) => {
-				console.log(error);
-        this.dialogRef.close(2);
-			}
-		);
+		if (this.data != null) {
+			this.categoryService.updateCategory(this.data.id, data).subscribe(
+				(resp: any) => {
+					console.log(resp);
+					this.dialogRef.close(1);
+				},
+				(error) => {
+					console.log(error);
+					this.dialogRef.close(2);
+				}
+			);
+		} else {
+			this.categoryService.saveCategory(data).subscribe(
+				(resp: any) => {
+					console.log(resp);
+					this.dialogRef.close(1);
+				},
+				(error) => {
+					console.log(error);
+					this.dialogRef.close(2);
+				}
+			);
+		}
 	}
 
 	onCancel() {
 		this.dialogRef.close(3);
+	}
+
+	updateForm(data: any) {
+		this.categoryForm.patchValue({
+			name: data.name,
+			description: data.description,
+		});
 	}
 }
