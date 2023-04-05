@@ -8,6 +8,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryService } from 'src/app/modules/shared/services/category.service';
 import { NewCategoryComponent } from '../new-category/new-category.component';
+import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
 
 @Component({
 	selector: 'app-category',
@@ -99,6 +100,24 @@ export class CategoryComponent implements OnInit {
 			} else if (result == 2) {
 				this.openSnackBar(
 					'Se produjo un error al actualizar categoria',
+					'Error'
+				);
+			}
+		});
+	}
+
+	delete(id: number) {
+		const dialogRef = this.dialog.open(ConfirmComponent, {
+			data: { id: id },
+		});
+
+		dialogRef.afterClosed().subscribe((result: any) => {
+			if (result == 1) {
+				this.openSnackBar('Categoria Eliminada', 'Exitosa');
+				this.getCategories();
+			} else if (result == 2) {
+				this.openSnackBar(
+					'Se produjo un error al eliminar categoria',
 					'Error'
 				);
 			}
