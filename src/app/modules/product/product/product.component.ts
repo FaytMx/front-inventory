@@ -63,7 +63,7 @@ export class ProductComponent implements OnInit {
 					name: product.name,
 					price: product.price,
 					account: product.account,
-					category: product.category.name,
+					category: product.category,
 					picture: 'data:image/jpeg;base64,' + product.picture,
 				});
 			});
@@ -73,6 +73,27 @@ export class ProductComponent implements OnInit {
 			);
 			this.dataSource.paginator = this.paginator;
 		}
+	}
+
+	edit(product: ProductElement) {
+		const { id, name, price, account, category } = product;
+
+		const dialogRef = this.dialog.open(NewProductComponent, {
+			width: '450px',
+			data:{id, name, price, account, category}
+		});
+
+		dialogRef.afterClosed().subscribe((result: any) => {
+			if (result == 1) {
+				this.openSnackBar('Producto editado', 'Exitosa');
+				this.getProducts();
+			} else if (result == 2) {
+				this.openSnackBar(
+					'Se produjo un error al editar producto',
+					'Error'
+				);
+			}
+		});
 	}
 
 	openProductDialog() {

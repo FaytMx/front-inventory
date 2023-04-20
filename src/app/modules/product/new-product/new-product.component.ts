@@ -35,7 +35,7 @@ export class NewProductComponent implements OnInit {
 		});
 
 		if (data !== null) {
-			// this.updateForm(data);
+			this.updateForm(data);
 			this.estadoFormulario = 'Actualizar';
 		}
 	}
@@ -53,7 +53,7 @@ export class NewProductComponent implements OnInit {
 			picture: this.selectedFile,
 		};
 
-    console.log(data);
+		console.log(data);
 
 		const uploadImageData = new FormData();
 		uploadImageData.append('picture', data.picture, data.picture.name);
@@ -62,16 +62,32 @@ export class NewProductComponent implements OnInit {
 		uploadImageData.append('account', data.account);
 		uploadImageData.append('categoryId', data.category);
 
-		this.productService.saveProduct(uploadImageData).subscribe(
-			(res: any) => {
-				console.log(res);
-				this.dialogRef.close(1);
-			},
-			(err: any) => {
-				console.log(err);
-        this.dialogRef.close(2);
-			}
-		);
+		if (this.data !== null) {
+			uploadImageData.append('id', this.data.id);
+			this.productService
+				.updateProduct(uploadImageData, this.data.id)
+				.subscribe(
+					(res: any) => {
+						console.log(res);
+						this.dialogRef.close(1);
+					},
+					(err: any) => {
+						console.log('👌👌',err);
+						this.dialogRef.close(2);
+					}
+				);
+		} else {
+			this.productService.saveProduct(uploadImageData).subscribe(
+				(res: any) => {
+					console.log(res);
+					this.dialogRef.close(1);
+				},
+				(err: any) => {
+					console.log(err);
+					this.dialogRef.close(2);
+				}
+			);
+		}
 	}
 
 	onCancel() {
@@ -97,5 +113,22 @@ export class NewProductComponent implements OnInit {
 			// const file = event.target.files[0];
 			// this.productForm.get('picture')?.setValue(file);
 		}
+	}
+
+	updateForm(data: any) {
+		this.productForm = this.fb.group({
+			name: [data.name, Validators.required],
+			price: [data.price, Validators.required],
+			account: [data.account, Validators.required],
+			category: [data.category.id, Validators.required],
+			picture: ['', Validators.required],
+		});
+		// this.productForm.patchValue({
+		// 	name: data.name,
+		// 	price: data.price,
+		// 	account: data.account,
+		// 	category: data.categoryId,
+		// 	picture: data.picture,
+		// });
 	}
 }
