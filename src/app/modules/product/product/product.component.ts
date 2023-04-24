@@ -98,8 +98,6 @@ export class ProductComponent implements OnInit {
 	}
 
 	delete(id: any) {
-		
-
 		const dialogRef = this.dialog.open(ConfirmComponent, {
 			width: '450px',
 			data:{id, module: 'product'}
@@ -116,6 +114,22 @@ export class ProductComponent implements OnInit {
 				);
 			}
 		});
+	}
+
+	buscar(nombre: string) {
+		if(nombre.length == 0){
+			return this.getProducts();
+		}
+
+		this.productService.getProductByName(nombre).subscribe(
+			(data: any) => {
+				console.log(data);
+				this.processProductsResponse(data);
+			},
+			(error:any) => {
+				console.log(error);
+			}
+		);
 	}
 
 	openProductDialog() {
