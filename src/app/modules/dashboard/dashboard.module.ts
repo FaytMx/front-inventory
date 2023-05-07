@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgChartsModule } from 'ng2-charts';
 import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './pages/dashboard.component';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { CategoryModule } from '../category/category.module';
 import { ProductModule } from '../product/product.module';
+import { MaterialModule } from '../material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
 	declarations: [DashboardComponent, HomeComponent],
@@ -15,6 +18,9 @@ import { ProductModule } from '../product/product.module';
 		SharedModule,
 		CategoryModule,
 		ProductModule,
+		MaterialModule,
+		FlexLayoutModule,
+		NgChartsModule,
 	],
 })
 export class DashboardModule {}

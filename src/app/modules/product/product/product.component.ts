@@ -86,7 +86,7 @@ export class ProductComponent implements OnInit {
 
 		const dialogRef = this.dialog.open(NewProductComponent, {
 			width: '450px',
-			data:{id, name, price, account, category}
+			data: { id, name, price, account, category },
 		});
 
 		dialogRef.afterClosed().subscribe((result: any) => {
@@ -105,7 +105,7 @@ export class ProductComponent implements OnInit {
 	delete(id: any) {
 		const dialogRef = this.dialog.open(ConfirmComponent, {
 			width: '450px',
-			data:{id, module: 'product'}
+			data: { id, module: 'product' },
 		});
 
 		dialogRef.afterClosed().subscribe((result: any) => {
@@ -122,7 +122,7 @@ export class ProductComponent implements OnInit {
 	}
 
 	buscar(nombre: string) {
-		if(nombre.length == 0){
+		if (nombre.length == 0) {
 			return this.getProducts();
 		}
 
@@ -131,7 +131,7 @@ export class ProductComponent implements OnInit {
 				console.log(data);
 				this.processProductsResponse(data);
 			},
-			(error:any) => {
+			(error: any) => {
 				console.log(error);
 			}
 		);
@@ -162,6 +162,30 @@ export class ProductComponent implements OnInit {
 		return this.snackBar.open(message, action, {
 			duration: 2000,
 		});
+	}
+
+	exportToExcel() {
+		this.productService.exportProducts().subscribe(
+			(data: any) => {
+				let file = new Blob([data], {
+					type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				});
+				let fileURL = URL.createObjectURL(file);
+				var anchor = document.createElement('a');
+				anchor.download = 'Productos.xlsx';
+				anchor.href = fileURL;
+				anchor.click();
+
+				this.openSnackBar('Productos exportadas', 'Exitosa');
+			},
+			(error) => {
+				console.log(error);
+				this.openSnackBar(
+					'Se produjo un error al exportar productos',
+					'Error'
+				);
+			}
+		);
 	}
 }
 
